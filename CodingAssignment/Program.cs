@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace CodingAssignment
 {
-    class Program
+    public class Program
     {
-        static private List<Record> recordList = new List<Record>();
+        // Record DB Singleton
+        static RecordDatabase db = RecordDatabase.Instance;
 
         static void Main(string[] args)
         {
@@ -22,7 +23,8 @@ namespace CodingAssignment
                 if (args.Length == 0) return;
             }
 
-            recordList.AddRange(ParseFile(args[0]));
+            // Add the file to the record database
+            db.AddFile(args[0]);
 
             var option = 0;
             do
@@ -71,34 +73,6 @@ namespace CodingAssignment
             }
         }
 
-        static private List<Record> ParseFile(String file)
-        {
-            List<Record> recordList = new List<Record>();
-
-            try
-            {
-                using (var reader = new StreamReader(file))
-                {
-                    var parser = new RecordParser();
-                    while (!reader.EndOfStream)
-                    {
-                        var line = reader.ReadLine();
-                        var record = parser.ParseRecord(line);
-                        recordList.Add(record);
-                    }
-                }
-
-                return recordList;
-            }
-            catch(Exception ex)
-            {
-                throw new ArgumentException(
-                    "Unable to parse the given file",
-                    "String file",
-                    ex);
-            }
-        }
-
         static private void DisplayOptionsToUser()
         {
             Console.WriteLine("Choose Option 1 to sort by Gender and then Last Name Ascending");
@@ -128,26 +102,20 @@ namespace CodingAssignment
         static private void ExecuteSortingOption(int option)
         {
             var endEarly = false;
+            var recordList = new List<Record>();
 
             switch(option)
             {
                 case 1:
-                    recordList = recordList
-                        .OrderBy(r => r.LastName)
-                        .OrderBy(r => r.Gender)
-                        .ToList();
+                    recordList = db.SortByGenderThenByLastName();
                     Console.WriteLine("Records Sorted by Gender and then Last Name Ascending");
                     break;
                 case 2:
-                    recordList = recordList
-                        .OrderBy(r => r.DateOfBirth)
-                        .ToList();
+                    recordList = db.SortByBirthDate();
                     Console.WriteLine("Records Sorted by Birthdate Ascending");
                     break;
                 case 3:
-                    recordList = recordList
-                        .OrderByDescending(r => r.LastName)
-                        .ToList();
+                    recordList = db.SortByLastNameDescending();
                     Console.WriteLine("Records Sorted by Last Name Descending");
                     break;
                 default:

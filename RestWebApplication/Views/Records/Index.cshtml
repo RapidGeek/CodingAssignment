@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    var db = CodingAssignment.RecordDatabase.Instance;
+}
+<div class="jumbotron">
+    <h1>Records</h1>
+</div>
+<div class="table">
+    <table>
+        <thead>
+            <tr>
+                <th>Last Name</th>
+                <th>First name</th>
+                <th>Gender</th>
+                <th>Favorite Color</th>
+                <th>BirthDate</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var row in db.Get())
+            {
+                <tr>
+                    <td>@row.LastName</td>
+                    <td>@row.FirstName</td>
+                    <td>@row.Gender</td>
+                    <td>@row.FavoriteColor</td>
+                    <td>@row.DateOfBirth</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

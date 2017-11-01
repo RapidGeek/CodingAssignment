@@ -32,8 +32,13 @@ namespace CodingAssignment
             record.FirstName = parts[1];
             record.Gender = parts[2];
             record.FavoriteColor = parts[3];
-            var timeParsed = DateTime.TryParseExact(parts[4], "M/d/yyyy", CultureInfo.CurrentCulture, DateTimeStyles.None, out record.DateOfBirth);
-            if(!timeParsed)
+            var dateParsed = DateTime.TryParseExact(
+                parts[4],
+                "M/d/yyyy",
+                CultureInfo.CurrentCulture,
+                DateTimeStyles.None,
+                out record.DateOfBirth);
+            if(!dateParsed)
             {
                 throw new ArgumentException(
                     "Invalid Date to parse",
